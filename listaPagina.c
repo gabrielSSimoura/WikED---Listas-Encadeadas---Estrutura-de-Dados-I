@@ -141,7 +141,7 @@ void RetiraCelulaPaginaListaPagina(ListaPagina *listaPagina, char *nomePagina)
     }
     ApagaListaLink(celulaAtual->listaLink);
     AlteraStatusListaContribuicao(celulaAtual->listaContribuicao);
-    ApagaCelulaListaContribuicao(celulaAtual->listaContribuicao);
+    ApagaListaContribuicao(celulaAtual->listaContribuicao);
 
     free(celulaAtual);
 }
@@ -214,7 +214,23 @@ void ApagaListaPagina(ListaPagina *listaPagina)
     while (celulaAtual != NULL)
     {
         celulaSeguinte = celulaAtual->proxima;
-        free(celulaAtual);
+
+        if (celulaAtual)
+        {
+            if (celulaAtual->listaContribuicao)
+            {
+                ApagaListaContribuicao(celulaAtual->listaContribuicao);
+            }
+            if (celulaAtual->listaLink)
+            {
+                ApagaListaLink(celulaAtual->listaLink);
+            }
+            if (celulaAtual->pagina)
+            {
+                ApagaPagina(celulaAtual->pagina);
+            }
+            free(celulaAtual);
+        }
         celulaAtual = celulaSeguinte;
     }
 

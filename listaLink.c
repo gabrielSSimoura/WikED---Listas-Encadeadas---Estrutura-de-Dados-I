@@ -42,6 +42,20 @@ Pagina *RetornaPaginaListaLink(ListaLink *listaLink, char *nomePagina)
     return NULL;
 }
 
+int BuscaLinkListaLink(ListaLink *listaLink, char *nomeLink)
+{
+    CelulaLink *celulaAtual;
+
+    for (celulaAtual = listaLink->Prim; celulaAtual != NULL; celulaAtual = celulaAtual->proxima)
+    {
+        if (strcmp(RetornaNomePagina(celulaAtual->pagina), nomeLink) == 0)
+        {
+            return 1; //Existe
+        }
+    }
+    return 0; //Não existe
+}
+
 void InsereListaLink(ListaLink *listaLink, Pagina *pagina)
 {
     CelulaLink *novaPagina = (CelulaLink *)malloc(sizeof(CelulaLink));

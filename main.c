@@ -155,6 +155,7 @@ int main(int argc, char *argv[])
     } while (strcmp(funcao, "FIM"));
 
     fclose(fileEntrada);
+    fclose(logFile);
 
     return 0;
 }
@@ -182,8 +183,8 @@ void RETIRAPAGINA(FILE *logFile, ListaPagina *listaPagina, char *nomePagina)
     }
     else if (paginaRetirada == NULL)
     {
-        printf("ERRO: não existe a pagina %s\n", nomePagina);
-        fprintf(logFile, "ERRO: não existe a pagina %s\n", nomePagina);
+        printf("ERRO: pagina de nome %s não encontrada\n", nomePagina);
+        fprintf(logFile, "ERRO: pagina de nome %s não encontrada\n", nomePagina);
         return;
     }
 }
@@ -222,6 +223,12 @@ void INSERELINK(FILE *logFile, ListaPagina *listaPagina, char *nomePaginaAtual, 
     }
 
     ListaLink *listalinkBuscada = RetornaListaLinkListaPagina(listaPagina, nomePaginaAtual);
+    if (BuscaLinkListaLink(listalinkBuscada, nomePaginaLinkada) == 1)
+    {
+        printf("ERRO: Link de nome %s ja existe na página %s/n", nomePaginaLinkada, nomePaginaAtual);
+        fprintf(logFile, "ERRO: Link de nome %s ja existe na página %s/n", nomePaginaLinkada, nomePaginaAtual);
+        return;
+    }
     InsereListaLink(listalinkBuscada, RetornaPaginaListaPagina(listaPagina, nomePaginaLinkada));
 }
 
@@ -240,7 +247,15 @@ void RETIRALINK(FILE *logFile, ListaPagina *listaPagina, char *nomePaginaAtual, 
         fprintf(logFile, "ERRO: pagina de nome %s nao encontrada\n", nomePaginaLinkada);
         return;
     }
+
+    // Verificar se o Link existe
     ListaLink *listalinkBuscada = RetornaListaLinkListaPagina(listaPagina, nomePaginaAtual);
+    if (BuscaLinkListaLink(listalinkBuscada, nomePaginaLinkada) == 0)
+    {
+        printf("ERRO: Link de nome %s não encontrada na página %s\n", nomePaginaLinkada, nomePaginaAtual);
+        fprintf(logFile, "ERRO: Link de nome %s não encontrada na página %s\n", nomePaginaLinkada, nomePaginaAtual);
+        return;
+    }
     RetiraListaLink(listalinkBuscada, nomePaginaLinkada);
 }
 
@@ -248,17 +263,19 @@ void INSERECONTRIBUICAO(FILE *logFile, ListaPagina *listaPagina, ListaEditor *li
 {
     if (!BuscaPaginaListaPagina(listaPagina, nomePagina))
     {
-        printf("ERRO: pagina de nome %s não existe\n", nomeArquivo);
-        fprintf(logFile, "ERRO: pagina de nome %s não existe\n", nomeArquivo);
+        printf("ERRO: pagina de nome %s não encontrada\n", nomePagina);
+        fprintf(logFile, "ERRO: pagina de nome %s não encontrada\n", nomePagina);
         return;
     }
 
     if (!BuscaEditorListaEditor(listaEditor, nomeEditor))
     {
-        printf("ERRO: editor de nome %s não existe\n", nomeEditor);
-        fprintf(logFile, "ERRO: editor de nome %s não existe\n", nomeEditor);
+        printf("ERRO: editor de nome %s não encontrada\n", nomeEditor);
+        fprintf(logFile, "ERRO: editor de nome %s não encontrada\n", nomeEditor);
         return;
     }
+
+    //Buscar se a contribuição já foi adicionada
 
     Contribuicao *novaContribuicao = InicializaContribuicao(nomeArquivo);
     Editor *editorBuscado = RetornaEditorListaEditor(listaEditor, nomeEditor);
@@ -272,15 +289,27 @@ void RETIRACONTRIBUICAO(FILE *logFile, ListaPagina *listaPagina, ListaEditor *li
     if (!BuscaPaginaListaPagina(listaPagina, nomePagina))
     {
 
-        printf("ERRO: pagina de nome %s não existe\n", nomeArquivo);
-        fprintf(logFile, "ERRO: pagina de nome %s não existe\n", nomeArquivo);
+        printf("ERRO: pagina de nome %s não encontrada\n", nomePagina);
+        fprintf(logFile, "ERRO: pagina de nome %s não encontrada\n", nomePagina);
         return;
     }
 
     if (!BuscaEditorListaEditor(listaEditor, nomeEditor))
     {
-        printf("ERRO: editor de nome %s não existe\n", nomeEditor);
-        fprintf(logFile, "ERRO: editor de nome %s não existe\n", nomeEditor);
+        printf("ERRO: editor de nome %s não encontrada\n", nomeEditor);
+        fprintf(logFile, "ERRO: editor de nome %s não encontrada\n", nomeEditor);
+        return;
+    }
+
+    //Buscar se há essa contribuição na pagina
+
+    ListaContribuicao *listaContribuicaoPagina = RetornaListaContribuicaoListaPagina(listaPagina, nomePagina);
+
+    if (RetornaStatusContribuicaoListaContribuicao(listaContribuicaoPagina, nomeArquivo) == 2)
+    {
+        printf("ERRO: contribuição de arquivo %s já retirada previamente\n", nomeArquivo);
+        fprintf(logFile, "ERRO: contribuição de arquivo %s já retirada previamente\n", nomeArquivo);
+
         return;
     }
 
@@ -322,8 +351,8 @@ void IMPRIMEPAGINA(FILE *logFile, ListaPagina *listaPagina, char *nomePagina)
     }
     else if (paginaRetirada == NULL)
     {
-        printf("ERRO: não existe a pagina %s\n", nomePagina);
-        fprintf(logFile, "ERRO: não existe a pagina %s\n", nomePagina);
+        printf("ERRO: pagina de nome %s não encontrada\n", nomePagina);
+        fprintf(logFile, "ERRO: pagina de nome %s não encontrada\n", nomePagina);
         return;
     }
 }

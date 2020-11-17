@@ -189,9 +189,11 @@ void ImprimeHistoricoListaContribuicao(FILE *logFile, FILE *fileEntrada, ListaCo
             printf(" <<retirada>>\n");
             fprintf(fileEntrada, " <<retirada>>\n");
         }
-
-        printf("\n");
-        fprintf(fileEntrada, "\n");
+        else
+        {
+            printf("\n");
+            fprintf(fileEntrada, "\n");
+        }
     }
 }
 
@@ -222,9 +224,9 @@ int RetornaStatusContribuicaoListaContribuicao(ListaContribuicao *listaContribui
 {
     CelulaContribuicao *celulaAtual = RetornaCelulaContribuicaoListaContribuicao(listaContribuicao, nomeArquivo);
 
-    if (celulaAtual->contribuicao == NULL)
+    if (celulaAtual == NULL)
     {
-        return -1;
+        return 2;
     }
 
     return (RetornaStatusContribuicao(celulaAtual->contribuicao));
@@ -242,7 +244,6 @@ void ApagaCelulaListaContribuicao(ListaContribuicao *listaContribuicao)
 
         if (celulaAtual)
         {
-            //AlteraStatusContribuicao(celulaAtual->contribuicao);
             free(celulaAtual);
         }
         celulaAtual = celulaSeguinte;
@@ -261,8 +262,12 @@ void ApagaListaContribuicao(ListaContribuicao *listaContribuicao)
     {
         celulaSeguinte = celulaAtual->proxima;
 
-        if (listaContribuicao)
+        if (celulaAtual)
         {
+            if (celulaAtual->contribuicao)
+            {
+                ApagaContribuicao(celulaAtual->contribuicao);
+            }
             free(celulaAtual);
         }
         celulaAtual = celulaSeguinte;

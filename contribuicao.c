@@ -50,8 +50,8 @@ void ImprimeArquivoContribuicao(FILE *logFile, FILE *paginaFile, char *nomeArqui
     FILE *fileContribuicao = fopen(rota, "r");
     if (fileContribuicao == NULL)
     {
-        printf("ERRO: arquivo de nome %s não existe\n", nomeArquivoContribuicao);
-        fprintf(logFile, "ERRO: arquivo de nome %s não existe\n", nomeArquivoContribuicao);
+        printf("ERRO: arquivo de nome %s não encontrada\n", nomeArquivoContribuicao);
+        fprintf(logFile, "ERRO: arquivo de nome %s não encontrada\n", nomeArquivoContribuicao);
         return;
     }
 
@@ -87,8 +87,9 @@ void ApagaContribuicao(Contribuicao *contribuicao)
 {
     if (contribuicao)
     {
+
         free(contribuicao->nomeArquivo);
-        // free(contribuicao->texto);
+
         free(contribuicao);
     }
 }

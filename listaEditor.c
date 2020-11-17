@@ -180,19 +180,20 @@ void ApagaListaEditor(ListaEditor *listaEditor)
 
     while (celulaAtual != NULL)
     {
+        celulaSeguinte = celulaAtual->proxima;
         if (celulaAtual)
         {
+            if (celulaAtual->listaContribuicao)
+            {
+                ApagaCelulaListaContribuicao(celulaAtual->listaContribuicao);
+            }
             if (celulaAtual->editor)
             {
                 ApagaEditor(celulaAtual->editor);
             }
-            if (celulaAtual->listaContribuicao)
-            {
-                ApagaListaContribuicao(celulaAtual->listaContribuicao);
-            }
             free(celulaAtual);
         }
-        celulaSeguinte = celulaAtual->proxima;
+
         celulaAtual = celulaSeguinte;
     }
 

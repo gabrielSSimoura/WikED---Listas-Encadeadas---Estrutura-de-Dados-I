@@ -10,3 +10,6 @@ wiked: main.c contribuicao.c editor.c listaLink.c pagina.c listaEditor.c listaPa
 
 clean:
 	rm -f *.o a.out core wiked.out
+
+run: 
+	valgrind --leak-check=full --show-leak-kinds=all ./wiked.out -s

@@ -50,8 +50,16 @@ void ApagaPagina(Pagina *pagina)
 {
     if (pagina)
     {
-        free(pagina->nomePagina);
-        free(pagina->nomeArquivo);
+
+        if (pagina->nomePagina)
+        {
+            free(pagina->nomePagina);
+        }
+        if (pagina->nomeArquivo)
+        {
+            free(pagina->nomeArquivo);
+        }
+
         free(pagina);
     }
 }

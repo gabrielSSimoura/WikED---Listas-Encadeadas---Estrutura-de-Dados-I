@@ -11,6 +11,8 @@ ListaLink *IniciaListaLink();
 
 Pagina *RetornaPaginaListaLink(ListaLink *listaLink, char *nomePagina);
 
+int BuscaLinkListaLink(ListaLink *listaLink, char *nomeLink);
+
 void RetiraListaLink(ListaLink *listaLink, char *nomePagina);
 
 void InsereListaLink(ListaLink *listaLink, Pagina *pagina);
