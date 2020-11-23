@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct celulaLink CelulaLink;
-
 #include "listaLink.h"
 
 struct celulaLink
@@ -19,6 +17,12 @@ struct listaLink
     CelulaLink *Ult;
 };
 
+/*Inicializa uma Lista de Link;
+ *inputs: (void);
+ *outputs: TAD (LinstaLink*) devidamente alocado;
+ *pré-condição: 
+ *pós-condição: (LinstaLink*) de retorno existente;
+*/
 ListaLink *IniciaListaLink()
 {
     ListaLink *listaLink = (ListaLink *)malloc(sizeof(ListaLink));
@@ -28,6 +32,12 @@ ListaLink *IniciaListaLink()
     return listaLink;
 }
 
+/*Retorna um TAD Pagina da Lista de Link;
+ *inputs: TAD (ListaLink*) e string com nome da página ;
+ *outputs: TAD (Pagina*);
+ *pré-condição TAD (ListaLink*) existente: 
+ *pós-condição: (Pagina*) de retorno existente;
+*/
 Pagina *RetornaPaginaListaLink(ListaLink *listaLink, char *nomePagina)
 {
     CelulaLink *celulaAtual;
@@ -42,6 +52,32 @@ Pagina *RetornaPaginaListaLink(ListaLink *listaLink, char *nomePagina)
     return NULL;
 }
 
+/*Retorna uma celula da Lista de Link;
+ *inputs: TAD (ListaLink*) e string com nome da página ;
+ *outputs: TAD (CelulaLink*);
+ *pré-condição TAD (ListaLink*) existente: 
+ *pós-condição: (CelulaLink*) de retorno existente;
+*/
+CelulaLink *RetornaCelulaLinkListaLink(ListaLink *listaLink, char *nomePagina)
+{
+    CelulaLink *celulaAtual;
+
+    for (celulaAtual = listaLink->Prim; celulaAtual != NULL; celulaAtual = celulaAtual->proxima)
+    {
+        if (strcmp(RetornaNomePagina(celulaAtual->pagina), nomePagina) == 0)
+        {
+            return celulaAtual;
+        }
+    }
+    return NULL;
+}
+
+/*Verifica pelo nome se a Pagina existe ou não na Lista de LInk
+ *inputs: TAD (ListaLink*), string com o nome da pagina;
+ *outputs: (int);
+ *pré-condição: (ListaLink*) existente;
+ *pós-condição: variável inteira existente para receber o valor do status da busca;
+*/
 int BuscaLinkListaLink(ListaLink *listaLink, char *nomeLink)
 {
     CelulaLink *celulaAtual;
@@ -56,6 +92,12 @@ int BuscaLinkListaLink(ListaLink *listaLink, char *nomeLink)
     return 0; //Não existe
 }
 
+/*Insere Pagina uma celula da Lista de Link;
+ *inputs: TAD (ListaLink*), (Pagina*);
+ *outputs: (void);
+ *pré-condição TAD (ListaLink*), (Pagina*) existentes: 
+ *pós-condição:  Pagina adicionado na Celula da Lista de Link;
+*/
 void InsereListaLink(ListaLink *listaLink, Pagina *pagina)
 {
     CelulaLink *novaPagina = (CelulaLink *)malloc(sizeof(CelulaLink));
@@ -77,6 +119,12 @@ void InsereListaLink(ListaLink *listaLink, Pagina *pagina)
     novaPagina->proxima = NULL;
 }
 
+/*Retira uma celula da Lista de Link;
+ *inputs: TAD (ListaLink*), string com o  nome da Pagina;
+ *outputs: (void);
+ *pré-condição TAD (ListaLink*) existente: 
+ *pós-condição: Celula da Lista retirada, (ListaLink*) modificada;
+*/
 void RetiraListaLink(ListaLink *listaLink, char *nomePagina)
 {
     CelulaLink *celulaAtual = listaLink->Prim;
@@ -122,30 +170,65 @@ void RetiraListaLink(ListaLink *listaLink, char *nomePagina)
     free(celulaAtual);
 }
 
+/*Imprime a Lista de Link
+ *inputs: TAD (ListaLink*) existente, arquivo da página, arquivo de log;
+ *outputs: (void);
+ *pré-condição: (ListaLink*, arquivo da página e arquivo de log existentes;
+ *pós-condição: (ListaLink*) não modificada;
+*/
 void ImprimeListaLink(FILE *logFile, FILE *fileEntrada, ListaLink *listaLink)
 {
 
     if (listaLink == NULL)
     {
-        printf("ERRO: pagina não possui lista de Link\n");
         fprintf(logFile, "ERRO: pagina não possui lista de Link\n");
         return;
     }
 
     CelulaLink *celula;
-    printf("\n--> Links\n");
     fprintf(fileEntrada, "\n--> Links\n");
 
     for (celula = listaLink->Prim; celula != NULL; celula = celula->proxima)
     {
         if (celula)
         {
-            printf("%s %s\n", RetornaNomePagina(celula->pagina), RetornaNomeArquivoPagina(celula->pagina));
             fprintf(fileEntrada, "%s %s\n", RetornaNomePagina(celula->pagina), RetornaNomeArquivoPagina(celula->pagina));
         }
     };
 }
 
+/*Busca os Caminhos na Lista de Link;
+ *inputs: TAD (ListaLink*), (ListaPagina*), (Pagina*);
+ *outputs: (void);
+ *pré-condição TAD (ListaLink*), (ListaPagina*) e (Pagina*) existentes: 
+ *pós-condição:  verificaçao se há caminho ou não de uma página à outra;
+*/
+void CaminhoListaLink(ListaPagina *listaPagina, ListaLink *paginasPercorridas, Pagina *paginaAtual)
+{
+    //Insere a pagina atual na lista de links das paginas percorridas;
+    InsereListaLink(paginasPercorridas, paginaAtual);
+
+    //Retorna lista de links da página atual;
+    ListaLink *novaListaLink = RetornaListaLinkListaPagina(listaPagina, RetornaNomePagina(paginaAtual));
+    CelulaLink *celulaAtual;
+
+    //Faz a busca
+    for (celulaAtual = novaListaLink->Prim; celulaAtual != NULL; celulaAtual = celulaAtual->proxima)
+    {
+        //Se não encontrar a pagina na lista de percorridas, então ela é adicionada;
+        if (RetornaCelulaLinkListaLink(paginasPercorridas, RetornaNomePagina(celulaAtual->pagina)) == NULL)
+        {
+            CaminhoListaLink(listaPagina, paginasPercorridas, celulaAtual->pagina);
+        }
+    }
+}
+
+/*Apaga a Lista de Link;
+ *inputs: TAD (ListaLink*);
+ *outputs: (void);
+ *pré-condição TAD (ListaLink*) existente: 
+ *pós-condição:  (ListaLink*) apagada;
+*/
 void ApagaListaLink(ListaLink *listaLink)
 {
     CelulaLink *celulaAtual = listaLink->Prim;

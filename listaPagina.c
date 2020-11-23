@@ -19,6 +19,12 @@ struct listaPagina
     CelulaPagina *Ult;
 };
 
+/*Inicializa uma Lista de Pagina;
+ *inputs: (void);
+ *outputs: TAD (LinstaPagina*) devidamente alocado;
+ *pré-condição: 
+ *pós-condição: (LinstaPagina*) de retorno existente;
+*/
 ListaPagina *IniciaListaPagina()
 {
     ListaPagina *listaPagina = (ListaPagina *)malloc(sizeof(ListaPagina));
@@ -28,6 +34,12 @@ ListaPagina *IniciaListaPagina()
     return listaPagina;
 }
 
+/*Retorna um TAD ListaContribuicao da Lista de Pagina;
+ *inputs: TAD (ListaPagina*) e string com nome da página ;
+ *outputs: TAD (ListaContribuicao*);
+ *pré-condição TAD (ListaPagina*) existente: 
+ *pós-condição: (ListaContribuicao*) de retorno existente;
+*/
 ListaContribuicao *RetornaListaContribuicaoListaPagina(ListaPagina *listaPagina, char *nomePagina)
 {
     CelulaPagina *celulaAtual = RetornaCelulaPaginaListaPagina(listaPagina, nomePagina);
@@ -40,6 +52,12 @@ ListaContribuicao *RetornaListaContribuicaoListaPagina(ListaPagina *listaPagina,
     return celulaAtual->listaContribuicao;
 }
 
+/*Retorna um TAD ListaLink da Lista de Pagina;
+ *inputs: TAD (ListaPagina*) e string com nome da página ;
+ *outputs: TAD (ListaLink*);
+ *pré-condição TAD (ListaPagina*) existente: 
+ *pós-condição: (ListaLink*) de retorno existente;
+*/
 ListaLink *RetornaListaLinkListaPagina(ListaPagina *listaPagina, char *nomePagina)
 {
     CelulaPagina *celulaAtual = RetornaCelulaPaginaListaPagina(listaPagina, nomePagina);
@@ -52,6 +70,12 @@ ListaLink *RetornaListaLinkListaPagina(ListaPagina *listaPagina, char *nomePagin
     return celulaAtual->listaLink;
 }
 
+/*Retorna um TAD CelulaPagina da Lista de Link;
+ *inputs: TAD (ListaPagina*) e string com nome da página ;
+ *outputs: TAD (CelulaPagina*);
+ *pré-condição TAD (ListaPagina*) existente: 
+ *pós-condição: (CelulaPagina*) de retorno existente;
+*/
 CelulaPagina *RetornaCelulaPaginaListaPagina(ListaPagina *listaPagina, char *nomePagina)
 {
     CelulaPagina *celulaAtual;
@@ -67,6 +91,12 @@ CelulaPagina *RetornaCelulaPaginaListaPagina(ListaPagina *listaPagina, char *nom
     return NULL;
 }
 
+/*Retorna um TAD Pagina da Lista de Pagina;
+ *inputs: TAD (ListaPagina*) e string com nome da página ;
+ *outputs: TAD (Pagina*);
+ *pré-condição TAD (ListaPagina*) existente: 
+ *pós-condição: (Pagina*) de retorno existente;
+*/
 Pagina *RetornaPaginaListaPagina(ListaPagina *listaPagina, char *nomePagina)
 {
     CelulaPagina *celulaAtual = RetornaCelulaPaginaListaPagina(listaPagina, nomePagina);
@@ -79,6 +109,12 @@ Pagina *RetornaPaginaListaPagina(ListaPagina *listaPagina, char *nomePagina)
     return celulaAtual->pagina;
 }
 
+/*Insere Pagina uma celula da Lista de Pagina;
+ *inputs: TAD (ListaPagina*), (Pagina*);
+ *outputs: (void);
+ *pré-condição TAD (ListaPagina*), (Pagina*) existentes: 
+ *pós-condição:  Pagina adicionado na Celula da Lista de Pagina;
+*/
 void InsereListaPagina(ListaPagina *listaPagina, Pagina *pagina)
 {
     CelulaPagina *novaPagina = (CelulaPagina *)malloc(sizeof(CelulaPagina));
@@ -97,6 +133,12 @@ void InsereListaPagina(ListaPagina *listaPagina, Pagina *pagina)
     novaPagina->proxima = NULL;
 };
 
+/*Retira uma celula da Lista de Pagina;
+ *inputs: TAD (ListaPagina*), string com o  nome da Pagina;
+ *outputs: (void);
+ *pré-condição TAD (ListaPagina*) existente: 
+ *pós-condição: Celula da Lista retirada, (ListaPagina*) modificada;
+*/
 void RetiraCelulaPaginaListaPagina(ListaPagina *listaPagina, char *nomePagina)
 {
     CelulaPagina *celulaAtual;
@@ -146,6 +188,12 @@ void RetiraCelulaPaginaListaPagina(ListaPagina *listaPagina, char *nomePagina)
     free(celulaAtual);
 }
 
+/*Retira uma Pagina da lista de Link da Lista de Pagina;
+ *inputs: TAD (ListaPagina*), string com o nome da Pagina;
+ *outputs: (void);
+ *pré-condição TAD (ListaPagina*) existente: 
+ *pós-condição: Pagina da Lista de Link da Lista de Pagina retirada, (ListaPagina*) modificada;
+*/
 void RetiraLinkListaPagina(ListaPagina *listaPagina, char *nomePagina)
 {
     CelulaPagina *celulaAtual;
@@ -156,6 +204,12 @@ void RetiraLinkListaPagina(ListaPagina *listaPagina, char *nomePagina)
     }
 }
 
+/*Verifica pelo nome se a Pagina existe ou não na Lista de Pagina
+ *inputs: TAD (ListaPagina*), string com o nome da pagina;
+ *outputs: (int);
+ *pré-condição: (ListaPagina*) existente;
+ *pós-condição: variável inteira existente para receber o valor do status da busca;
+*/
 int BuscaPaginaListaPagina(ListaPagina *listaPagina, char *nomePagina)
 {
     CelulaPagina *celulaAtual;
@@ -171,6 +225,12 @@ int BuscaPaginaListaPagina(ListaPagina *listaPagina, char *nomePagina)
     return 0; //Não Existe
 }
 
+/*Percorre a Lista Imprimindo as paginas da lista de pagina
+ *inputs: TAD (ListaPagina*) existente, arquivo de log;
+ *outputs: (void);
+ *pré-condição: (ListaPagina* e arquivo de log existentes;
+ *pós-condição: (ListaPagina*) não modificada;
+*/
 void ImprimeCompletaListaPagina(FILE *logFile, ListaPagina *listaPagina)
 {
     CelulaPagina *celulaAtual;
@@ -181,16 +241,21 @@ void ImprimeCompletaListaPagina(FILE *logFile, ListaPagina *listaPagina)
     };
 }
 
+/*Imprime uma pagina da lista de pagina com todos os seus dados
+ *inputs: TAD (ListaPagina*) existente, arquivo de log, nome da paginaa;
+ *outputs: (void);
+ *pré-condição: (ListaPagina* e arquivo de log existentes;
+ *pós-condição: (ListaPagina*) não modificada;
+*/
 void ImprimePaginaCompletaListaPagina(FILE *logFile, ListaPagina *listaPagina, char *nomePagina)
 {
     CelulaPagina *celulaPagina = RetornaCelulaPaginaListaPagina(listaPagina, nomePagina);
-    char nomeArquivoPagina[30] = "outputs/";
-    strcat(nomeArquivoPagina, RetornaNomeArquivoPagina(celulaPagina->pagina));
+    char nomeArquivoPagina[30];
+    strcpy(nomeArquivoPagina, RetornaNomeArquivoPagina(celulaPagina->pagina));
     FILE *filePagina = fopen(nomeArquivoPagina, "w");
 
     if (celulaPagina == NULL)
     {
-        printf("ERRO: página de nome %s não encontrada\n", nomePagina);
         fprintf(logFile, "ERRO: página de nome %s não encontrada\n", nomePagina);
 
         return;
@@ -200,12 +265,16 @@ void ImprimePaginaCompletaListaPagina(FILE *logFile, ListaPagina *listaPagina, c
     ImprimeHistoricoListaContribuicao(logFile, filePagina, celulaPagina->listaContribuicao);
     ImprimeListaLink(logFile, filePagina, celulaPagina->listaLink);
     ImprimeListaContribuicao(filePagina, logFile, celulaPagina->listaContribuicao);
-    printf("\n");
-    fprintf(filePagina, "\n");
 
     fclose(filePagina);
 }
 
+/*Apaga a Lista de Pagina;
+ *inputs: TAD (ListaPagina*);
+ *outputs: (void);
+ *pré-condição TAD (ListaPagina*) existente: 
+ *pós-condição:  (ListaPagina*) apagada;
+*/
 void ApagaListaPagina(ListaPagina *listaPagina)
 {
     CelulaPagina *celulaAtual = listaPagina->Prim;

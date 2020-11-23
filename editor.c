@@ -9,36 +9,42 @@ struct editor
     char *nome;
 };
 
-// inicializa Editor
+/*Inicializa editor;
+ *inputs: nome do editor;
+ *outputs: (Editor*) devidamente inicializado e alocado;
+ *pré-condição: string existente;
+ *pós-condição: (Editor*) de retorno existente;
+*/
 Editor *InicializaEditor(char *nome)
 {
     Editor *editor = (Editor *)malloc(sizeof(Editor));
-    editor->nome = strdup(nome);
+    editor->nome = strdup(nome); //Aloca o ponteiro para o nome com o tamanho preciso;
 
     return editor;
 }
 
-//Imprime os dados do Editor;
-void ImprimeEditor(Editor *editor)
-{
-    if (editor)
-    {
-        printf("%s\n", editor->nome);
-    }
-}
-
-//Retorna o nome do editor desejado;
+/*Retorna o nome de um editor;
+ *inputs: TAD editor existente;
+ *outputs: (char*) com o nome da editor;
+ *pré-condição: (Editor*) existente, com string nome existente;
+ *pós-condição: (Editor*) não modificado;
+*/
 char *RetornaNomeEditor(Editor *editor)
 {
     return editor->nome;
 }
 
-//Apaga o editor desejado
+/*Apaga o editor desejado
+ *inputs: TAD editor existente;
+ *outputs: (void) - editor Apagada;
+ *pré-condição: (Editor*) existente;
+ *pós-condição: (Editor*) Apagada;
+*/
 void ApagaEditor(Editor *editor)
 {
     if (editor)
     {
-        free(editor->nome);
+        free(editor->nome); //Verifica se o ponteiro para nome, existe;
     }
     free(editor);
 }

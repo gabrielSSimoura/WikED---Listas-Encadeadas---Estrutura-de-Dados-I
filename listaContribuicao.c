@@ -18,6 +18,12 @@ struct listaContribuicao
     CelulaContribuicao *Ult;
 };
 
+/*Inicializa uma Lista de Contribuições;
+ *inputs: (void);
+ *outputs: TAD (ListaContribuicao*) devidamente alocado;
+ *pré-condição: 
+ *pós-condição: (ListaContribuicao*) de retorno existente;
+*/
 ListaContribuicao *IniciaListaContribuicao()
 {
     ListaContribuicao *listaContribuicao = (ListaContribuicao *)malloc(sizeof(ListaContribuicao));
@@ -27,9 +33,17 @@ ListaContribuicao *IniciaListaContribuicao()
     return listaContribuicao;
 }
 
+/*Retorna um TAD de Editor da Lista de Contribuição;
+ *inputs: TAD (ListaContribuicao*) e string com nome do editor ;
+ *outputs: TAD (Editor*);
+ *pré-condição TAD (ListaContribuicao*) existente: 
+ *pós-condição: (Editor*) de retorno existente;
+*/
 Editor *RetornaEditorListaContribuicao(ListaContribuicao *listaContribuicao, char *nomeEditor)
 {
     CelulaContribuicao *celulaAtual;
+
+    //Faz a busca pelo editor de nome = nomeEditor, na lista de contribuição
 
     for (celulaAtual = listaContribuicao->Prim; celulaAtual != NULL; celulaAtual = celulaAtual->proxima)
     {
@@ -42,8 +56,15 @@ Editor *RetornaEditorListaContribuicao(ListaContribuicao *listaContribuicao, cha
     return NULL;
 }
 
+/*Retorna um TAD Contribuição da Lista de Contribuição;
+ *inputs: TAD (ListaContribuicao*) e string com nome do arquivo da contribuição ;
+ *outputs: TAD (Contribuicao*) ;
+ *pré-condição TAD (ListaContribuicao*) existente: 
+ *pós-condição: (Contribuicao*) de retorno existente;
+*/
 Contribuicao *RetornaContribuicaoListaContribuicao(ListaContribuicao *listaContribuicao, char *nomeArquivo)
 {
+    //Chama uma função que Retorna a Celula Buscada pelo nome de arquivo
     CelulaContribuicao *celulaAtual = RetornaCelulaContribuicaoListaContribuicao(listaContribuicao, nomeArquivo);
 
     if (celulaAtual == NULL)
@@ -54,6 +75,12 @@ Contribuicao *RetornaContribuicaoListaContribuicao(ListaContribuicao *listaContr
     return celulaAtual->contribuicao;
 }
 
+/*Retorna um TAD CelulaContribuição da Lista de Contribuição;
+ *inputs: TAD (ListaContribuicao*) e string com nome do arquivo da contribuição ;
+ *outputs: TAD (CelulaContribuicao*)  ;
+ *pré-condição TAD (ListaContribuicao*) existente: 
+ *pós-condição: (CelulaContribuicao*) de retorno existente;
+*/
 CelulaContribuicao *RetornaCelulaContribuicaoListaContribuicao(ListaContribuicao *listaContribuicao, char *nomeArquivo)
 {
     CelulaContribuicao *celulaAtual;
@@ -69,6 +96,12 @@ CelulaContribuicao *RetornaCelulaContribuicaoListaContribuicao(ListaContribuicao
     return NULL;
 }
 
+/*Insere dados em uma celula da Lista de Contribuição;
+ *inputs: TAD (ListaContribuicao*), (Editor*) e (Contriuicao*);
+ *outputs: (void);
+ *pré-condição TAD (ListaContribuicao*), (Editor*) e (Contriuicao*) existente: 
+ *pós-condição: Celula da Contribuição criada;
+*/
 void InsereListaContribuicao(ListaContribuicao *listaContribuicao, Contribuicao *contribuicao, Editor *editor)
 {
     CelulaContribuicao *novaContribucao = (CelulaContribuicao *)malloc(sizeof(CelulaContribuicao));
@@ -88,6 +121,12 @@ void InsereListaContribuicao(ListaContribuicao *listaContribuicao, Contribuicao 
     novaContribucao->proxima = NULL;
 }
 
+/*Retira uma celula da Lista de Contribuição;
+ *inputs: TAD (ListaContribuicao*);
+ *outputs: (void);
+ *pré-condição TAD (ListaContribuicao*) existente: 
+ *pós-condição: Celula da Contribuição retirada, (ListaContribuição*) modificada;
+*/
 void RetiraCelulaListaContribuicao(ListaContribuicao *listaContribuicao, char *nomeArquivo)
 {
     CelulaContribuicao *celulaAtual = listaContribuicao->Prim;
@@ -133,20 +172,24 @@ void RetiraCelulaListaContribuicao(ListaContribuicao *listaContribuicao, char *n
     free(celulaAtual);
 }
 
+/*Imprime a Lista de Contribuição
+ *inputs: TAD (ListaContribuicao*) existente, arquivo da página, arquivo de log;
+ *outputs: (void);
+ *pré-condição: (ListaContribuicao*, arquivo da página e arquivo de log existentes;
+ *pós-condição: (ListaContribuicao*) não modificada;
+*/
 void ImprimeListaContribuicao(FILE *paginaFile, FILE *logFile, ListaContribuicao *listaContribuicao)
 {
 
     if (listaContribuicao == NULL)
     {
-        printf("ERRO: pagina não possui Lista de Contribuições\n");
         fprintf(logFile, "ERRO: pagina não possui Lista de Contribuições\n");
         return;
     }
 
     CelulaContribuicao *celula;
 
-    printf("\n--> Textos\n");
-    fprintf(paginaFile, "\n--> Textos\n");
+    fprintf(paginaFile, "\n--> Textos");
 
     for (celula = listaContribuicao->Prim; celula != NULL; celula = celula->proxima)
     {
@@ -155,48 +198,53 @@ void ImprimeListaContribuicao(FILE *paginaFile, FILE *logFile, ListaContribuicao
             continue;
         }
 
-        printf("\n-------- %s (%s) --------\n\n", RetornaNomeArquivoContribuicao(celula->contribuicao), RetornaNomeEditor(celula->editor));
-        fprintf(paginaFile, "\n-------- %s (%s) --------\n\n", RetornaNomeArquivoContribuicao(celula->contribuicao), RetornaNomeEditor(celula->editor));
+        fprintf(paginaFile, "\n\n-------- %s (%s) --------\n\n", RetornaNomeArquivoContribuicao(celula->contribuicao), RetornaNomeEditor(celula->editor));
         ImprimeArquivoContribuicao(logFile, paginaFile, RetornaNomeArquivoContribuicao(celula->contribuicao));
-        printf("\n");
         fprintf(paginaFile, "\n");
     };
 }
 
+/*Imprime o Histórico de Contribuições da Lista de Contribuição
+ *inputs: TAD (ListaContribuicao*) existente, arquivo da página, arquivo de log;
+ *outputs: (void);
+ *pré-condição: (ListaContribuicao*, arquivo da página e arquivo de log existentes;
+ *pós-condição: (ListaContribuicao*) não modificada;
+*/
 void ImprimeHistoricoListaContribuicao(FILE *logFile, FILE *fileEntrada, ListaContribuicao *listaContribuicao)
 {
 
     if (listaContribuicao == NULL)
     {
-        printf("ERRO: pagina não possui histórico de Contribuições\n");
         fprintf(logFile, "ERRO: pagina não possui histórico de Contribuições\n");
         return;
     }
 
     CelulaContribuicao *celulaAtual;
 
-    printf("\n--> Historico de contribuicoes\n");
     fprintf(fileEntrada, "\n--> Historico de contribuicoes\n");
 
     for (celulaAtual = listaContribuicao->Prim; celulaAtual != NULL; celulaAtual = celulaAtual->proxima)
     {
 
-        printf("%s %s", RetornaNomeEditor(celulaAtual->editor), RetornaNomeArquivoContribuicao(celulaAtual->contribuicao));
         fprintf(fileEntrada, "%s %s", RetornaNomeEditor(celulaAtual->editor), RetornaNomeArquivoContribuicao(celulaAtual->contribuicao));
 
         if (RetornaStatusContribuicao(celulaAtual->contribuicao))
         {
-            printf(" <<retirada>>\n");
             fprintf(fileEntrada, " <<retirada>>\n");
         }
         else
         {
-            printf("\n");
             fprintf(fileEntrada, "\n");
         }
     }
 }
 
+/*Altera o Status de uma Contribuiçao da Lista de Contribuição
+ *inputs: TAD (ListaContribuicao*), nome do arquivo;
+ *outputs: (void);
+ *pré-condição: (ListaContribuicao*) existente;
+ *pós-condição:  Status da Contribuiçao desejada da Lista de Contribuição modificada;
+*/
 void AlteraStatusContribuicaoListaContribuicao(ListaContribuicao *listaContribuicao, char *nomeArquivo)
 {
     CelulaContribuicao *celulaAtual = RetornaCelulaContribuicaoListaContribuicao(listaContribuicao, nomeArquivo);
@@ -209,6 +257,12 @@ void AlteraStatusContribuicaoListaContribuicao(ListaContribuicao *listaContribui
     AlteraStatusContribuicao(celulaAtual->contribuicao);
 }
 
+/*Altera o Status da Lista de Contribuição
+ *inputs: TAD (ListaContribuicao*);
+ *outputs: (void);
+ *pré-condição: (ListaContribuicao*) existente;
+ *pós-condição:  Status da Lista de Contribuição modificada;
+*/
 void AlteraStatusListaContribuicao(ListaContribuicao *listaContribuicao)
 {
     CelulaContribuicao *celulaAtual;
@@ -220,6 +274,12 @@ void AlteraStatusListaContribuicao(ListaContribuicao *listaContribuicao)
     }
 }
 
+/*Retorna o Status de uma Contribuiçao da Lista de Contribuição
+ *inputs: TAD (ListaContribuicao*), nome do arquivo;
+ *outputs: (int);
+ *pré-condição: (ListaContribuicao*) existente;
+ *pós-condição:  variável inteira existente para receber o valor do status;
+*/
 int RetornaStatusContribuicaoListaContribuicao(ListaContribuicao *listaContribuicao, char *nomeArquivo)
 {
     CelulaContribuicao *celulaAtual = RetornaCelulaContribuicaoListaContribuicao(listaContribuicao, nomeArquivo);
@@ -232,6 +292,12 @@ int RetornaStatusContribuicaoListaContribuicao(ListaContribuicao *listaContribui
     return (RetornaStatusContribuicao(celulaAtual->contribuicao));
 }
 
+/*Apaga as celulas da Lista de Contribuição;
+ *inputs: TAD (ListaContribuicao*);
+ *outputs: (void);
+ *pré-condição TAD (ListaContribuicao*) existente: 
+ *pós-condição:  (ListaContribuição*) esvaziada;
+*/
 void ApagaCelulaListaContribuicao(ListaContribuicao *listaContribuicao)
 {
 
@@ -252,6 +318,12 @@ void ApagaCelulaListaContribuicao(ListaContribuicao *listaContribuicao)
     free(listaContribuicao);
 }
 
+/*Apaga a Lista de Contribuição;
+ *inputs: TAD (ListaContribuicao*);
+ *outputs: (void);
+ *pré-condição TAD (ListaContribuicao*) existente: 
+ *pós-condição:  (ListaContribuição*) apagada;
+*/
 void ApagaListaContribuicao(ListaContribuicao *listaContribuicao)
 
 {

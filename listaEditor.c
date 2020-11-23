@@ -18,6 +18,12 @@ struct listaEditor
     CelulaEditor *Ult;
 };
 
+/*Inicializa uma Lista de Editor;
+ *inputs: (void);
+ *outputs: TAD (ListaEditor*) devidamente alocado;
+ *pré-condição: 
+ *pós-condição: (ListaEditor*) de retorno existente;
+*/
 ListaEditor *IniciaListaEditor()
 {
     ListaEditor *listaEditor = (ListaEditor *)malloc(sizeof(ListaEditor));
@@ -27,6 +33,12 @@ ListaEditor *IniciaListaEditor()
     return listaEditor;
 }
 
+/*Retorna um TAD ListaContribuicao da Lista de Editor;
+ *inputs: TAD (ListaEditor*) e string com nome do editor;
+ *outputs: TAD (ListaContribuicao*);
+ *pré-condição TAD (ListaEditor*) existente: 
+ *pós-condição: (ListaContribuicao*) de retorno existente;
+*/
 ListaContribuicao *RetornaListaContribuicaoListaEditor(ListaEditor *listaEditor, char *nome)
 {
     CelulaEditor *celulaAtual = RetornaCelulaEditorListaEditor(listaEditor, nome);
@@ -41,34 +53,12 @@ ListaContribuicao *RetornaListaContribuicaoListaEditor(ListaEditor *listaEditor,
     }
 }
 
-Editor *RetornaEditorListaEditor(ListaEditor *listaEditor, char *nome)
-{
-    CelulaEditor *celulaAtual = RetornaCelulaEditorListaEditor(listaEditor, nome);
-
-    if (celulaAtual)
-    {
-        return celulaAtual->editor;
-    }
-    else
-    {
-        return NULL;
-    }
-}
-
-void InsereContribuicaoListaContribuicaoListaEditor(ListaEditor *listaEditor, Contribuicao *contribuicao, char *nome)
-{
-    CelulaEditor *celulaAtual = RetornaCelulaEditorListaEditor(listaEditor, nome);
-
-    if (celulaAtual == NULL)
-    {
-        printf("ERRO: não foi possivel inserir a contribuição na lista de contribuições do editor %s\n", nome);
-        // fprintf(logFile, "ERRO: não foi possivel inserir a contribuição na lista de contribuições do editor %s\n", nome);
-        return;
-    }
-
-    InsereListaContribuicao(celulaAtual->listaContribuicao, contribuicao, celulaAtual->editor);
-}
-
+/*Retorna um TAD CelulaEditor da Lista de Editor;
+ *inputs: TAD (ListaEditor*) e string com nome do editor;
+ *outputs: TAD (CelulaContribuicao*)  ;
+ *pré-condição TAD (ListaEditor*) existente: 
+ *pós-condição: (CelulaEditor*) de retorno existente;
+*/
 CelulaEditor *RetornaCelulaEditorListaEditor(ListaEditor *listaEditor, char *nome)
 {
     CelulaEditor *celulaAtual;
@@ -84,6 +74,51 @@ CelulaEditor *RetornaCelulaEditorListaEditor(ListaEditor *listaEditor, char *nom
     return NULL; //Não Existe Editor com esse nome;
 }
 
+/*Retorna um TAD de Editor da Lista de Editor;
+ *inputs: TAD (ListaEditor*) e string com nome do editor ;
+ *outputs: TAD (Editor*);
+ *pré-condição TAD (ListaEditor*) existente: 
+ *pós-condição: (Editor*) de retorno existente;
+*/
+Editor *RetornaEditorListaEditor(ListaEditor *listaEditor, char *nome)
+{
+    CelulaEditor *celulaAtual = RetornaCelulaEditorListaEditor(listaEditor, nome);
+
+    if (celulaAtual)
+    {
+        return celulaAtual->editor;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+/*Insere Contribuição uma celula da Lista de Editor;
+ *inputs: TAD (ListaEditor*), (Contribuicao*), string com o nome do editor;
+ *outputs: (void);
+ *pré-condição TAD (ListaEditor*), (Contribuicao*) existentes: 
+ *pós-condição:  Contribuicao adicionada na Celula da Lista de Editor;
+*/
+void InsereContribuicaoListaContribuicaoListaEditor(ListaEditor *listaEditor, Contribuicao *contribuicao, char *nome)
+{
+    CelulaEditor *celulaAtual = RetornaCelulaEditorListaEditor(listaEditor, nome);
+
+    if (celulaAtual == NULL)
+    {
+        printf("ERRO: não foi possivel inserir a contribuição na lista de contribuições do editor %s\n", nome);
+        return;
+    }
+
+    InsereListaContribuicao(celulaAtual->listaContribuicao, contribuicao, celulaAtual->editor);
+}
+
+/*Insere Editor uma celula da Lista de Editor;
+ *inputs: TAD (ListaEditor*), (Editor*);
+ *outputs: (void);
+ *pré-condição TAD (ListaEditor*), (Editor*) existentes: 
+ *pós-condição:  Editor adicionado na Celula da Lista de Editor;
+*/
 void InsereEditorListaEditor(ListaEditor *listaEditor, Editor *editor)
 {
     CelulaEditor *novoEditor = (CelulaEditor *)malloc(sizeof(CelulaEditor));
@@ -100,6 +135,12 @@ void InsereEditorListaEditor(ListaEditor *listaEditor, Editor *editor)
     novoEditor->proxima = NULL;
 }
 
+/*Retira uma celula da Lista de Editor;
+ *inputs: TAD (ListaEditor*), string com o  nome do editor;
+ *outputs: (void);
+ *pré-condição TAD (ListaEditor*) existente: 
+ *pós-condição: Celula da Lista retirada, (ListaContribuição*) modificada;
+*/
 void RetiraListaEditor(ListaEditor *listaEditor, char *nome)
 {
     CelulaEditor *celulaAtual;
@@ -146,17 +187,28 @@ void RetiraListaEditor(ListaEditor *listaEditor, char *nome)
     free(celulaAtual);
 }
 
+/*Imprime a Lista de Editor
+ *inputs: TAD (ListaEditor*) existente, arquivo da página, arquivo de log;
+ *outputs: (void);
+ *pré-condição: (ListaEditor*, arquivo da página e arquivo de log existentes;
+ *pós-condição: (ListaEditor*) não modificada;
+*/
 void ImprimeListaEditor(FILE *paginaFile, FILE *logFile, ListaEditor *listaEditor)
 {
     CelulaEditor *celulaAtual;
 
     for (celulaAtual = listaEditor->Prim; celulaAtual != NULL; celulaAtual = celulaAtual->proxima)
     {
-        ImprimeEditor(celulaAtual->editor);
         ImprimeListaContribuicao(paginaFile, logFile, celulaAtual->listaContribuicao);
     };
 }
 
+/*Verifica pelo nome se o Editor existe ou não na Lista de Editor
+ *inputs: TAD (ListaEditor*), string com o nome do editor;
+ *outputs: (int);
+ *pré-condição: (ListaEditor*) existente;
+ *pós-condição: variável inteira existente para receber o valor do status da busca;
+*/
 int BuscaEditorListaEditor(ListaEditor *listaEditor, char *nome)
 {
     CelulaEditor *celulaAtual;
@@ -172,6 +224,12 @@ int BuscaEditorListaEditor(ListaEditor *listaEditor, char *nome)
     return 0; //Não Existe Editor;
 }
 
+/*Apaga a Lista de Editor;
+ *inputs: TAD (ListaEditor*);
+ *outputs: (void);
+ *pré-condição TAD (ListaEditor*) existente: 
+ *pós-condição:  (ListaEditor*) apagada;
+*/
 void ApagaListaEditor(ListaEditor *listaEditor)
 {
 
