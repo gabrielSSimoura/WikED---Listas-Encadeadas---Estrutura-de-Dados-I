@@ -34,7 +34,7 @@ ListaContribuicao *IniciaListaContribuicao()
 }
 
 /*Retorna um TAD de Editor da Lista de Contribuição;
- *inputs: TAD (ListaContribuicao*) e string com nome do editor ;
+ *inputs: TAD (ListaContribuicao*) e string com nome do arquivo ;
  *outputs: TAD (Editor*);
  *pré-condição TAD (ListaContribuicao*) existente: 
  *pós-condição: (Editor*) de retorno existente;

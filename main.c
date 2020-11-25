@@ -8,7 +8,7 @@
 #include "listaPagina.h"
 #include "listaLink.h"
 
-void INSEREPAGINA(ListaPagina *listaPagina, char *nomePagina, char *nomeArquivo);
+void INSEREPAGINA(FILE *logFile, ListaPagina *listaPagina, char *nomePagina, char *nomeArquivo);
 void RETIRAPAGINA(FILE *logFile, ListaPagina *listaPagina, char *nomePagina);
 void INSEREEDITOR(FILE *logFile, ListaEditor *listaEditor, char *nomeEditor);
 void INSERELINK(FILE *logFile, ListaPagina *listaPagina, char *nomePaginaAtual, char *nomePaginaLinkada); //To do
@@ -44,14 +44,19 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    //Tratar Lixo na leitura de arquivos;
     char lixo = '0';
 
+    //Lê o arquivo até encontrar um char válido;
     while (!(lixo >= 'A' && lixo <= 'Z') && !(lixo >= 'a' && lixo <= 'z'))
     {
         fscanf(fileEntrada, "%c", &lixo);
     }
 
+    //Atribuindo o primeiro char válido à primeira posição da string da função;
     funcao[0] = lixo;
+
+    //Lê a primeira função do arquivo de entrada.txt;
     for (int i = 1; lixo != ' '; i++)
     {
         fscanf(fileEntrada, "%c", &lixo);
@@ -65,8 +70,10 @@ int main(int argc, char *argv[])
         }
     }
 
+    //Inicializa as listas de páginas e de editores;
     ListaPagina *listaPagina = IniciaListaPagina();
     ListaEditor *listaEditor = IniciaListaEditor();
+
     //Função constante de leitura e execução do programa até o "FIM" do arquivo;
     //É feita a leitura da função no arquivo de entrada e a função equivalente é chamada, com os parâmetros lidos;
     do
@@ -82,7 +89,7 @@ int main(int argc, char *argv[])
         {
             fscanf(fileEntrada, "%s", parametro1);
             fscanf(fileEntrada, "%s", parametro2);
-            INSEREPAGINA(listaPagina, parametro1, parametro2);
+            INSEREPAGINA(logFile, listaPagina, parametro1, parametro2);
             continue;
         }
         else if (strcmp(funcao, "RETIRAPAGINA") == 0)
@@ -164,8 +171,16 @@ void FIM(ListaPagina *listaPagina, ListaEditor *listaEditor)
 }
 
 //Inserindo página na lista de Página;
-void INSEREPAGINA(ListaPagina *listaPagina, char *nomePagina, char *nomeArquivo)
+void INSEREPAGINA(FILE *logFile, ListaPagina *listaPagina, char *nomePagina, char *nomeArquivo)
 {
+
+    //Verficar se a página já foi inserida
+    if (BuscaPaginaListaPagina(listaPagina, nomePagina))
+    {
+        fprintf(logFile, "ERRO: pagina de nome %s já inserida previamente\n", nomePagina);
+        return;
+    }
+
     Pagina *novaPagina = InicializaPagina(nomePagina, nomeArquivo);
     InsereListaPagina(listaPagina, novaPagina);
 }
@@ -230,7 +245,7 @@ void INSERELINK(FILE *logFile, ListaPagina *listaPagina, char *nomePaginaAtual, 
     //Verificar se o link já existe;
     if (BuscaLinkListaLink(listalinkBuscada, nomePaginaLinkada) == 1)
     {
-        fprintf(logFile, "ERRO: Link de nome %s ja existe na página %s/n", nomePaginaLinkada, nomePaginaAtual);
+        fprintf(logFile, "ERRO: Link de nome %s ja existe na página %s\n", nomePaginaLinkada, nomePaginaAtual);
         return;
     }
     InsereListaLink(listalinkBuscada, RetornaPaginaListaPagina(listaPagina, nomePaginaLinkada));
@@ -329,18 +344,17 @@ void RETIRACONTRIBUICAO(FILE *logFile, ListaPagina *listaPagina, ListaEditor *li
         return;
     }
     // Verificar se o editor pode apagar a contribuição;
-    Editor *editorBuscado = RetornaEditorListaEditor(listaEditor, nomeEditor);
-    Editor *editorBuscadoDaListaContribuicao = RetornaEditorListaContribuicao(listaContribuicaoBuscada, nomeEditor); //Problema ao apagar duas vezes
+    Contribuicao *verificaListaContribuicaoEditor = RetornaContribuicaoListaContribuicao(listaContribuicaoBuscada, nomeArquivo);
 
     //Caso nao for o mesmo editor
-    if (strcmp(RetornaNomeEditor(editorBuscado), RetornaNomeEditor(editorBuscadoDaListaContribuicao)) != 0)
+    if (verificaListaContribuicaoEditor == NULL)
     {
         fprintf(logFile, "ERRO: editor de nome %s não tem direito de excluir esta contribuição\n", nomeEditor);
         return;
     }
 
     //Se o editor for o mesmo
-    else if (strcmp(RetornaNomeEditor(editorBuscado), RetornaNomeEditor(editorBuscadoDaListaContribuicao)) == 0)
+    else if (verificaListaContribuicaoEditor)
     {
         AlteraStatusContribuicaoListaContribuicao(listaContribuicaoBuscada, nomeArquivo);
     }

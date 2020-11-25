@@ -38,6 +38,7 @@ Contribuicao *InicializaContribuicao(char *nomeArquivo)
 */
 char *RetornaNomeArquivoContribuicao(Contribuicao *contribuicao)
 {
+
     return contribuicao->nomeArquivo;
 }
 
