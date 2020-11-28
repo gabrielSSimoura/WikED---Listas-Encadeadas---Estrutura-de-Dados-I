@@ -60,10 +60,12 @@ int main(int argc, char *argv[])
     for (int i = 1; lixo != ' '; i++)
     {
         fscanf(fileEntrada, "%c", &lixo);
+
         if (lixo != ' ')
         {
             funcao[i] = lixo;
         }
+
         else
         {
             funcao[i] = '\0';
@@ -102,6 +104,12 @@ int main(int argc, char *argv[])
         {
             fscanf(fileEntrada, "%s", parametro1);
             INSEREEDITOR(logFile, listaEditor, parametro1);
+            continue;
+        }
+        else if (strcmp(funcao, "RETIRAEDITOR") == 0)
+        {
+            fprintf(logFile, "ERRO: Função RETIRAEDITOR indisponível no momento\n");
+            fscanf(fileEntrada, "%s", parametro1);
             continue;
         }
 
@@ -397,7 +405,16 @@ void CAMINHO(FILE *logFile, FILE *fileEntrda, ListaPagina *listaPagina, char *no
         return;
     }
 
+    //Verifica se as Páginas são iguais
     Pagina *paginaAtual = RetornaPaginaListaPagina(listaPagina, nomePaginaAtual);
+    Pagina *paginaLinkada = RetornaPaginaListaPagina(listaPagina, nomePaginaLinkada);
+
+    if (strcmp(RetornaNomePagina(paginaAtual), RetornaNomePagina(paginaLinkada)) == 0)
+    {
+        fprintf(logFile, "ERRO: paginas iguais\n");
+        return;
+    }
+
     ListaLink *paginasPercorridas = IniciaListaLink();
 
     CaminhoListaLink(listaPagina, paginasPercorridas, paginaAtual);
